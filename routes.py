@@ -1,51 +1,31 @@
-from db import cadenaConexion
+from db import get_cursor
 
 def listadoTareas():
     sql = "SELECT * FROM tarea"
-    conn = cadenaConexion()
-    cur = conn.cursor()
-    cur.execute(sql)
-    result = cur.fetchall()
-    cur.close()
-    conn.close()
-    return result
+    with get_cursor() as cur:
+        cur.execute(sql)
+        return cur.fetchall()
 
 def listarTarea(id):
     sql = "SELECT * FROM tarea WHERE id=%s"
-    conn = cadenaConexion()
-    cur = conn.cursor()
-    cur.execute(sql,(id,))
-    result = cur.fetchone()
-    cur.close()
-    conn.close()
-    return result
+    with get_cursor() as cur:
+        cur.execute(sql, (id,))
+        return cur.fetchone()
 
 def guardarTarea(titulo, contexto, autor):
     sql = "INSERT INTO tarea (titulo,contexto,autor) VALUES (%s,%s,%s)"
-    conn = cadenaConexion()
-    cur = conn.cursor()
-    cur.execute(sql,(titulo,contexto,autor))
-    conn.commit()
-    cur.close()
-    conn.close()
-    return "Tarea creada exitosamente"
+    with get_cursor() as cur:
+        cur.execute(sql, (titulo, contexto, autor))
+        return "Tarea creada exitosamente"
 
 def actualizarTarea(id, titulo, contexto, autor):
     sql = "UPDATE tarea SET titulo=%s,contexto=%s,autor=%s WHERE id=%s"
-    conn = cadenaConexion()
-    cur = conn.cursor()
-    cur.execute(sql,(titulo,contexto,autor,id))
-    conn.commit()
-    cur.close()
-    conn.close()
-    return "Tarea actualizada exitosamente"
+    with get_cursor() as cur:
+        cur.execute(sql, (titulo, contexto, autor, id))
+        return "Tarea actualizada exitosamente"
 
 def eliminarTarea(id):
     sql = "DELETE FROM tarea WHERE id=%s"
-    conn = cadenaConexion()
-    cur = conn.cursor()
-    cur.execute(sql,(id,))
-    conn.commit()
-    cur.close()
-    conn.close()
-    return "Tarea eliminada exitosamente"
+    with get_cursor() as cur:
+        cur.execute(sql, (id,))
+        return "Tarea eliminada exitosamente"
