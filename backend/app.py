@@ -1,12 +1,25 @@
 from flask import Flask, jsonify, request
 import routes
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.get("/api/tareas")
 def get_tareas():
     data = routes.listadoTareas()
-    return jsonify(data)
+
+    respuesta = []
+    for fila in data:
+        respuesta.append({
+            "id": fila[0],
+            "titulo": fila[1],
+            "contexto": fila[2],
+            "autor": fila[3]
+        })
+
+    # return jsonify(data)
+    return respuesta
 
 @app.get("/api/tareas/<id>")
 def get_tarea(id):
